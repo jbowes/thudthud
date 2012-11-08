@@ -2,12 +2,14 @@
   %head
     %title Thud Thud :: Drum Kit
     %link(rel="stylesheet" href="style.css" type="text/css")
+    %script(src="/js/socket.io.js")
+    %script(src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js")
+    %script(src="/thudthud.js")
   %body
     .header Thud Thud
     
     :each drum in drums
-      %audio(preload="auto" controls="True" autoplay="true" autobuffer="true")
-        %source(src="sound/!{drum}.ogg" type="audio/ogg")
+      %audio(id="snd-!{drum}" preload="auto" autobuffer="true" src="/sound/!{drum}.ogg" type="audio/ogg")
 
     .machine
       %table#machine_table
