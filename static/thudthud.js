@@ -37,9 +37,14 @@ jQuery(function() {
         if (!(drum_type in beats)) {
             beats[drum_type] = [false, false, false, false, false, false, false, false];
         }
-        beats[drum_type][event.target.id] = true;
+        if (beats[drum_type][event.target.id] == true) {
+            beats[drum_type][event.target.id] = false;
+            $(this).removeClass("active");
+        } else {
+            beats[drum_type][event.target.id] = true;
+            $(this).addClass("active");
+        }
 
-        $(this).addClass("active");
     });
 
    playBeats();
