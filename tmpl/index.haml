@@ -4,6 +4,10 @@
     %link(rel="stylesheet" href="style.css" type="text/css")
   %body
     .header Thud Thud
+    
+    :each drum in drums
+      %audio(preload="auto" controls="True" autoplay="true" autobuffer="true")
+        %source(src="sound/!{drum}.ogg" type="audio/ogg")
 
     .machine
       %table#machine_table
