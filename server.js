@@ -1,17 +1,24 @@
-// requires node's http module
-var http = require('http');
+var app = require('http').createServer(handler)
+var io = require('socket.io').listen(app)
+var fs = require('fs')
+var haml = require('haml')
 
-// creates a new httpServer instance
-http.createServer(function (req, res) {
-  // this is the callback, or request handler for the httpServer
+var drums = ['bass', 'hihat']
+var bars = [0, 1, 2, 3]
+var locals = {drums:drums, bars:bars}
 
-  // respond to the browser, write some headers so the 
-  // browser knows what type of content we are sending
-  res.writeHead(200, {'Content-Type': 'text/html'});
+function handler (req, res) {
+    fs.readFile(__dirname + '/tmpl/index.haml', 'utf8',
+    function (err, data) {
+        if (err) {
+            res.writeHead(500);
+            return res.end('Error loading index!');
+        }
 
-  // write some content to the browser that your user will see
-  res.write('<h1>hello, i know nodejitsu. and service hooks</h1>');
+        index = haml.render(data, {locals:locals})
+        res.writeHead(200);
+        res.end(index);
+    });
+}
 
-  // close the response
-  res.end();
-}).listen(8080); // the server will listen on port 8080
+app.listen(8083);

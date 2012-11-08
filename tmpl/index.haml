@@ -1,0 +1,13 @@
+%html
+  %head
+    %title Thud Thud :: Drum Kit
+  %body
+    .header Thud Thud
+
+    .machine
+      %table#machine_table
+        :each drum in drums
+          %tr(id="!{drum}")
+            :each bar in bars
+              %td(id="!{bar}")
+                !{drum} and !{bar}
