@@ -17,7 +17,7 @@ function playBeats() {
         $(beats[beat]).each(function(i) {
             if (bar == i && beats[beat][i] == true) {
                 console.log(beat + " " + bar);
-                $("audio#snd-" + beat).get(0).play();
+                $("audio#snd-" + beat + "-" + i).get(0).play();
             }
         });
     });
@@ -33,7 +33,6 @@ jQuery(function() {
     $("td").click(function(event) {
         drum_type = $(this).parent().attr("id");
         console.log("clicked: " + drum_type + " " + event.target.id);
-        $("audio#snd-" + drum_type).get(0).play();
 
         if (!(drum_type in beats)) {
             beats[drum_type] = [false, false, false, false, false, false, false, false];

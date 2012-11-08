@@ -7,7 +7,13 @@ module.exports = {
     configure: configure
 };
 
-var drums = ['clap', 'snare', 'cowbell']
+var drums = [];
+fs.readdir(__dirname + "/static/sound/", function(err, files) {
+    for (file in files) {
+        drums.push(files[file].split(".")[0]);
+    }
+});
+
 var bars = [0, 1, 2, 3, 4, 5, 6, 7]
 var locals = {drums:drums, bars:bars}
 
