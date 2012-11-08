@@ -10,3 +10,18 @@ td
     margin: 1em;
     border-radius: 0.75em;
 }
+
+th.active
+{
+    background-color: red;
+}
+
+th.inactive
+{
+    background-color: white;
+}
+
+td.active
+{
+    background-color: red;
+}

@@ -7,12 +7,13 @@
     %script(src="/thudthud.js")
   %body
     .header Thud Thud
-    
     :each drum in drums
       %audio(id="snd-!{drum}" preload="auto" autobuffer="true" src="/sound/!{drum}.ogg" type="audio/ogg")
 
     .machine
       %table#machine_table
+        :each bar in bars
+          %th(id="!{bar}" class="inactive")
         :each drum in drums
           %tr(id="!{drum}")
             :each bar in bars
