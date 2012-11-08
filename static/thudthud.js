@@ -1,5 +1,6 @@
 var bar = 0;
 var beats = {};
+var muted = false;
 
 function playBeats() {
     $("th").each(function(i) {
@@ -16,8 +17,10 @@ function playBeats() {
     $.each(beats, function(beat) {
         $(beats[beat]).each(function(i) {
             if (bar == i && beats[beat][i] == true) {
-                console.log(beat + " " + bar);
-                $("audio#snd-" + beat + "-" + i).get(0).play();
+                if (!muted) {
+                    console.log(beat + " " + bar);
+                    $("audio#snd-" + beat + "-" + i).get(0).play();
+                }
             }
         });
     });
@@ -30,6 +33,10 @@ function playBeats() {
 }
 
 jQuery(function() {
+    $("a#mute").click(function() {
+        muted = !muted;
+    });
+
     $("td").click(function(event) {
         drum_type = $(this).parent().attr("id");
         console.log("clicked: " + drum_type + " " + event.target.id);
