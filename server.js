@@ -1,8 +1,19 @@
 var fileserve = require('./fileserve');
 var express = require('express');
-//var io = require('socket.io').listen(app)
+var http = require('http');
 
 var app = express();
 fileserve.configure(app);
 
-app.listen(8083);
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+
+
+io.sockets.on('connection', function (socket) {
+    console.log('A socket conected');
+    socket.on('toggle', function(data) {
+        console.log('toggled: ' + data);
+    });
+});
+
+server.listen(8083);

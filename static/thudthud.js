@@ -2,6 +2,16 @@ var bar = 0;
 var beats = {};
 var muted = false;
 
+function setupSocket(socket) {
+    socket.on('connect', function() {
+        console.log("connected to the server!");
+    });
+   
+    socket.on('error', function() {
+        console.log("anything");
+    });
+}
+
 function playBeats() {
     $("th").each(function(i) {
         if (i == bar) {
@@ -33,6 +43,8 @@ function playBeats() {
 }
 
 jQuery(function() {
+    var socket = io.connect();
+   
     $("a#mute").click(function() {
         muted = !muted;
     });
@@ -44,15 +56,19 @@ jQuery(function() {
         if (!(drum_type in beats)) {
             beats[drum_type] = [false, false, false, false, false, false, false, false];
         }
+        var toggle_name = drum_type + "_" + event.target.id;
         if (beats[drum_type][event.target.id] == true) {
             beats[drum_type][event.target.id] = false;
             $(this).removeClass("active");
+            socket.emit("toggle", {name: toggle_name, state: false});
         } else {
             beats[drum_type][event.target.id] = true;
             $(this).addClass("active");
+            socket.emit("toggle", {name: toggle_name, state: true});
         }
 
     });
 
-   playBeats();
+    setupSocket(socket);
+    playBeats();
 });
