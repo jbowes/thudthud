@@ -1,6 +1,6 @@
-var bar = 0;
-var beats = {};
+var currentBar = 0;
 var muted = false;
+var beats = {};
 
 function setupSocket(socket) {
     socket.on('connect', function() {
@@ -21,11 +21,26 @@ function setupSocket(socket) {
         
         beats[data.drum][data.bar] = data.state;
     });
+
+    // the full state of the table. recieved when we first connect
+    socket.on('table', function(table) {
+        beats = table;
+
+        for (drum in table) {
+            for (bar in table[drum]) {
+                if (table[drum][bar]) {
+                    $("#" + drum + "_" + bar).addClass("active");
+                } else {
+                    $("#" + drum + "_" + bar).removeClass("active");
+                }
+            }
+        }
+    });
 }
 
 function playBeats() {
     $("th").each(function(i) {
-        if (i == bar) {
+        if (i == currentBar) {
             $(this).addClass("active");
         } else {
             $(this).removeClass("active");
@@ -35,9 +50,9 @@ function playBeats() {
 
     $.each(beats, function(beat) {
         $(beats[beat]).each(function(i) {
-            if (bar == i && beats[beat][i] == true) {
+            if (currentBar == i && beats[beat][i] == true) {
                 if (!muted) {
-                    console.log(beat + " " + bar);
+                    console.log(beat + " " + currentBar);
                     $("audio#snd-" + beat + "-" + i).get(0).play();
                 }
             }
@@ -45,8 +60,8 @@ function playBeats() {
     });
 
     window.setTimeout(playBeats, 256);
-    bar++;
-    bar %= 8;
+    currentBar++;
+    currentBar %= 8;
 }
 
 jQuery(function() {

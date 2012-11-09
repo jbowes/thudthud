@@ -7,15 +7,7 @@ module.exports = {
     configure: configure
 };
 
-var drums = [];
-fs.readdir(__dirname + "/static/sound/", function(err, files) {
-    for (file in files) {
-        drums.push(files[file].split(".")[0]);
-    }
-});
-
-var bars = [0, 1, 2, 3, 4, 5, 6, 7]
-var locals = {drums:drums, bars:bars}
+var locals;
 
 function serveIndex(req, res) {
     fs.readFile(__dirname + '/tmpl/index.haml', 'utf8',
@@ -31,7 +23,11 @@ function serveIndex(req, res) {
     });
 }
 
-function configure(app) {
+function configure(app, table) {
+    locals = table;
+
+    console.log(table.drums);
+
     app.use(function(req, res, next) {
         console.log('%s %s', req.method, req.url);
         next();
