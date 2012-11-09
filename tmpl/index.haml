@@ -18,8 +18,8 @@
         :each drum in drums
           %tr(id="!{drum}")
             :each bar in bars
-              %td(id="!{bar}")
-                !{drum} and !{bar}
+              %td(id="!{drum}_!{bar}" class="!{bar}")
+                !{drum}
 
     .mute
       %a(id="mute")

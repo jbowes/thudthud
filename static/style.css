@@ -11,14 +11,15 @@ td
     border-radius: 0.75em;
 }
 
+th
+{
+    height: 0.5em;
+    border-radius: 0.25em;
+}
+
 th.active
 {
     background-color: red;
-}
-
-th.inactive
-{
-    background-color: white;
 }
 
 td.active

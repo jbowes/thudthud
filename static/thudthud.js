@@ -8,7 +8,18 @@ function setupSocket(socket) {
     });
    
     socket.on('error', function() {
-        console.log("anything");
+        console.log("got an error!");
+    });
+
+    socket.on('toggle', function(data) {
+        console.log("got remote toggle");
+        if (data.state) {
+            $("#" + data.drum + "_" + data.bar).addClass("active");
+        } else {
+            $("#" + data.drum + "_" + data.bar).removeClass("active");
+        }
+        
+        beats[data.drum][data.bar] = data.state;
     });
 }
 
@@ -16,10 +27,8 @@ function playBeats() {
     $("th").each(function(i) {
         if (i == bar) {
             $(this).addClass("active");
-            $(this).removeClass("inactive");
         } else {
             $(this).removeClass("active");
-            $(this).addClass("inactive");
         }
 
     });
@@ -37,13 +46,18 @@ function playBeats() {
 
     window.setTimeout(playBeats, 256);
     bar++;
-    if (bar == 8) {
-        bar = 0;
-    }   
+    bar %= 8;
 }
 
 jQuery(function() {
     var socket = io.connect();
+
+    // initialize the instrument matrix
+    $("tr").each(function(index, row) {
+        if (row.id) {
+            beats[row.id] = [false, false, false, false, false, false, false, false];
+        }
+    });
    
     $("a#mute").click(function() {
         muted = !muted;
@@ -51,22 +65,21 @@ jQuery(function() {
 
     $("td").click(function(event) {
         drum_type = $(this).parent().attr("id");
-        console.log("clicked: " + drum_type + " " + event.target.id);
 
-        if (!(drum_type in beats)) {
-            beats[drum_type] = [false, false, false, false, false, false, false, false];
-        }
-        var toggle_name = drum_type + "_" + event.target.id;
-        if (beats[drum_type][event.target.id] == true) {
-            beats[drum_type][event.target.id] = false;
-            $(this).removeClass("active");
-            socket.emit("toggle", {name: toggle_name, state: false});
-        } else {
-            beats[drum_type][event.target.id] = true;
-            $(this).addClass("active");
-            socket.emit("toggle", {name: toggle_name, state: true});
-        }
+        // figure out the bar of this cell
+        var bar = "";
+        classes = event.target.className.split(/\s+/);
+        $.each(classes, function(index, item) {
+            if (item != "active") {
+                bar = item;
+            }
+        });
 
+        console.log("clicked: " + drum_type + " " + bar);
+
+        $(this).toggleClass("active")
+        beats[drum_type][bar] = !beats[drum_type][bar];
+        socket.emit("toggle", {drum: drum_type, bar: bar, state: beats[drum_type][bar]});
     });
 
     setupSocket(socket);

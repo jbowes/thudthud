@@ -13,6 +13,7 @@ io.sockets.on('connection', function (socket) {
     console.log('A socket conected');
     socket.on('toggle', function(data) {
         console.log('toggled: ' + data);
+        socket.broadcast.emit('toggle', data);
     });
 });
 
